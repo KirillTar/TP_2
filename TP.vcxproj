@@ -152,10 +152,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="DeckElement.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TP_2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Deck.h" />
+    <ClInclude Include="DeckElement.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

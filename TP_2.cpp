@@ -3,64 +3,113 @@
 #include <conio.h>
 #include <windows.h>
 #include "Timer.h"
+#include "Deck.h"
 
 #define ENTER 13
 #define ESCAPE 32
 
 using namespace std;
 
-Timer timer = Timer(300, 0, 40);
+Timer timer = Timer(200, 3, 13); 
 
-//void IntegerLoop() {
-//	int num;
-//
-//	cout << "Введите начальное число: ";
-//	cin >> num;
-//	system("@cls||clear");
-//
-//	Integer integer(num);
-//
-//	string commands[] = {
-//		"Вычесть число (--int)",
-//		"Вычесть еденицу (int--)",
-//		"Прибавть число (++int)",
-//		"Прибавть еденицу (int++)",
-//		"Получить отрицательное значение (!)",
-//		"\033[31mВернуться в меню\033[0m"
-//	};
-//	
-//	lastSelectedMenuLine = 0;
-//
-//	while (true)
-//	{
-//		string status = "Значение класса Integer: \033[31m" + to_string(integer.getData()) + "\033[0m";
-//
-//		int command = menu(status, commands, 6);
-//
-//		switch (command)
-//		{
-//			case 0:
-//				--integer;
-//				break;
-//			case 1:
-//				integer--;
-//				break;
-//			case 2:
-//				++integer;
-//				break;
-//			case 3:
-//				integer--;
-//				break;
-//			case 4:
-//				cout << !integer;
-//				backLoop();
-//				break;
-//			case 5:
-//				return;
-//		}
-//	}
-//}
-//
+
+void DeckLoop() {
+	system("@cls||clear");
+
+	Deck d1 = Deck();
+	cout << endl << d1.getStr() << endl << endl;
+	Deck d2 = Deck();
+	cout << endl << d2.getStr() << endl << endl;
+
+	int command = 0;
+	int num = 0;
+	printf("1) Increase by number \n");
+	printf("2) Multiply by number \n");
+	printf("3) Add element \n");
+	printf("4) Multiply head by number \n");
+	printf("5) Assign \n");
+	printf("6) Equality test \n");
+	printf("7) Inequality test \n");
+	printf("8) Pop element \n");
+	printf("9) Exit to menu \n");
+	printf("0) Exit programm \n");
+		
+	cout << endl << "Command:";
+	cin >> command;
+	cout << endl;
+	switch (command)
+	{
+	case 1:
+		cout << "Enter number:";
+		cin >> num;
+		cout << endl;
+		d1 + num;
+		cout <<	d1.getStr() << endl << "Increased";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;
+
+	case 2:
+		cout << "Enter number:";
+		cin >> num;
+		cout << endl;
+		d1*num;
+		cout << d1.getStr() << endl << "Multiplyed";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;
+
+	case 3:
+		d1+=0;
+		cout << d1.getStr() << endl << "Added";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;
+
+	case 4:
+		cout << "Enter number:";
+		cin >> num;
+		cout << endl;
+		d1*=num;
+		cout << d1.getStr() << endl << "Head multiplyed";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;
+
+	/*case 5:
+		timer--;
+		cout << endl << "Assigned";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;*/
+
+	case 6:
+		d1 == d2;
+		cout << endl << "Test completed";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;
+
+	case 7:
+		d1 != d2;
+		cout << endl << "Test completed";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;
+
+	/*case 8:
+		;
+		cout << endl << "Popped";
+		cout << endl << endl << "Press any key to exit" << endl;
+		_getch();
+		break;*/
+
+	case 0:
+		exit(0);
+		break;
+	}
+}
+
 void TimerLoop() 
 {
 		int x = 0;
@@ -135,12 +184,13 @@ int main()
 	int command = 0;
 	while (true)
 	{
-		cout << "1)Timer" << endl;
+		cout << "1)Timer" << endl << "2)Deck" << endl << endl << "Enter command:";
 		cin >> command;
 		system("@cls||clear");
 		switch (command) 
 		{
-		case 1: TimerLoop();
+		case 1: TimerLoop(); break;
+		case 2: DeckLoop(); break;
 		}
 		system("@cls||clear");
 	}
