@@ -1,6 +1,9 @@
 
 #include <iostream>
 #include <sstream>
+#include <ctime>
+#include <algorithm>
+
 #include "DeckElement.h"
 
 using namespace std;
@@ -8,6 +11,8 @@ using namespace std;
 class Deck
 {
 public:
+	int size;
+
 	Deck();
 
 	void operator+=(int num);
@@ -16,25 +21,25 @@ public:
 	friend Deck operator*=(const Deck &d1, int num);
 	friend Deck operator*(const Deck& d1, int num);
 
-	/*Deck operator=(int value);*/
-
 	bool operator==(const Deck& d);
 	bool operator!=(const Deck& d);
 
+	Deck operator=(Deck deck);
 
 	string getStr();
 
-	void setHead(DeckElement* element);
-	DeckElement* getHead();
-	
-	void setTail(DeckElement* element);
-	DeckElement* getTail();
+	void Clear();
 
-	/*void pop();*/
+	void extract();
 	bool isEmpty();
 
 private:
+	void popFromHead();
+	void popFromTail();
+
+	void append(int number);
+	void prepend(int number);
+
 	DeckElement* head;
 	DeckElement* tail;
-	int size;
 };

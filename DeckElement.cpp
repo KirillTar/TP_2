@@ -36,6 +36,6 @@ DeckElement* DeckElement::getNext() {
 	return next;
 }
 
-void DeckElement::setNext(DeckElement* prev) {
+void DeckElement::setNext(DeckElement* next) {
 	this->next = next;
 }

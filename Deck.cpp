@@ -2,122 +2,199 @@
 
 Deck::Deck() 
 {
-	int i;
-	int num;
-	cout << "Enter size:";
-	cin >> size;
+	srand(time(0));
+
+	int len;
+
+	cout << "Enter size: ";
+	cin >> len;
 	cout << endl;
-	for (i = 0; i <= size; ++i)
+
+	for (int i = 0; i < len; ++i)
 	{
-		num = rand() % (20 - 15 + 1) + 15;
-		DeckElement* element = new DeckElement(num, head);
-		if (i==0)
-			this->tail = element;
-		this->head = element;
+		int number = rand() % (20 - 15 + 1) + 15;
+		append(number);
 	}
-	this->tail->setNext(this->head);
+
 }
 
-void Deck::setHead(DeckElement* element) {
-	this->head = element;
-}
 
-void Deck::setTail(DeckElement* element) {
-	this->tail = element;
-}
+void Deck::Clear()
+{
+	DeckElement* last = this->tail;
+	DeckElement* tmp;
 
-DeckElement* Deck::getHead() {
-	return head;
-}
-
-DeckElement* Deck::getTail() {
-	return tail;
-}
-
-bool Deck::isEmpty() {
-	return this->head == nullptr;
-}
-
-void Deck::operator+=(int num) {
-	DeckElement* element;
-	int command = 0;
-	cout << "1.Add to head || 2.Add to tail"<< endl <<"Command:";
-	cin >> command;
-	cout << endl << endl;
-	switch (command)
+	for (int i = 0; i < size; ++i)
 	{
-	case 1:
-			num = rand() % (20 - 15 + 1) + 14;
-			element = new DeckElement(num, head);
-			this->tail->setNext(element);
-			this->head = element;
-			this->head->setNext(tail);
-	case 2:
-			num = rand() % (20 - 15 + 1) + 14;
-			element = new DeckElement(num, tail);
-			this->head->setNext(element);
-			this->tail = element;
-			this->tail->setNext(head);
-			break;
+		tmp = last;
+		last = last->getNext();
+		delete tmp;
 	}
+
+	head = nullptr;
+	tail = nullptr;
+	size = 0;
+}
+
+void Deck::append(int number) {
+	DeckElement* headElemnet = new DeckElement(number, tail);
+
+	if (head) {
+		head->setNext(headElemnet);
+	}
+
+	head = headElemnet;
+
+	if (!tail) {
+		tail = headElemnet;
+	}
+
 	size++;
 }
 
+void Deck::prepend(int number) {
+	DeckElement* tailElement = new DeckElement(number, tail);
+
+	if (head) {
+		head->setNext(tailElement);
+	}
+
+	tail = tailElement;
+
+	if (!head) {
+		head = tailElement;
+	}
+
+	size++;
+}
+
+
+void Deck::operator+=(int num) {
+
+	int command = 0;
+
+	cout << "1. Add to head " << endl << "2. Add to tail" << endl << "Command: ";
+	cin >> command;
+	cout << endl << endl;
+
+	switch (command)
+	{
+
+	case 1:
+		num = rand() % (20 - 15 + 1) + 14;
+		append(num);
+		break;
+	case 2:
+		num = rand() % (20 - 15 + 1) + 14;
+		prepend(num);
+		break;
+	}
+}
+
+void Deck::popFromHead() {
+	if (isEmpty())
+	{
+		cout << "Deck is Empty!";
+		return;
+	}
+
+	cout << "Value: " << this->head->getData() << endl;
+
+	if (size == 1)
+	{
+		Clear();
+		return;
+	}
+
+	DeckElement* beforeHead = this->tail;
+
+	while (beforeHead->getNext() != head) {
+		beforeHead = beforeHead->getNext();
+	}
+
+	beforeHead->setNext(tail);
+
+	delete head;
+
+	head = beforeHead;
+
+	size--;
+}
+
+void Deck::popFromTail() {
+	if (isEmpty())
+	{
+		cout << "Deck is Empty!";
+		return;
+	}
+
+	cout << "Value: " << this->tail->getData() << endl;
+
+	if (size == 1)
+	{
+		Clear();
+		return;
+	}
+
+	DeckElement* next = tail->getNext();
+
+	head->setNext(next);
+
+	delete tail;
+
+	tail = next;
+
+	size--;
+}
+
+void Deck::extract()
+{
+	int command = 0;
+
+	cout << "1. From head " << endl << "2. From tail" << endl << endl << "Command: ";
+	cin >> command;
+	cout << endl << endl;
+
+	switch (command)
+	{
+
+	case 1:
+		popFromHead();
+		break;
+	case 2:
+		popFromTail();
+		break;
+	}
+}
+
 Deck Deck::operator+(int num) {
-	int i;
-	DeckElement* last = this->head;
-	for (i = 0; i < size; ++i)
+	DeckElement* last = this->tail;
+
+	for (int i = 0; i < size; ++i)
 	{
 		*last += num;
 		last = last->getNext();
 	}
+
 	return *this;
 }
 
-//void Deck::pop() {
-//	if (isEmpty()) return;
-//
-//	DeckElement* last = this->head;
-//	DeckElement* prev = last;
-//
-//	int command = 0;
-//	cout << "1.Pop from head || 2.Pop from tail" << endl << "Command:" << command;
-//	switch (command)
-//	{
-//	case 1:
-//
-//		if (!last->getNext())
-//		{
-//			head = nullptr;
-//			delete last;
-//			return;
-//		}
-//			while (last)
-//			{
-//				if (last->getNext()) {
-//					prev = last;
-//					last = last->getNext();
-//				}
-//				else {
-//					break;
-//				}
-//			}
-//			prev->setNext(nullptr);
-//			delete last;
-//		}
-//}
-
-	Deck operator*=(const Deck & d1, int num)
+Deck operator*=(const Deck & d1, int num)
 {
+	if (d1.size == 0)
+	{
+		cout << "Deck is Empty!" << endl;
+		return d1;
+	}
+
 	d1.head->setData(d1.head->getData()*num);
 	return d1;
 }
 
 Deck operator*(const Deck& d1, int num)
 {
-	int i;
 	DeckElement* last = d1.head;
-	for (i = 0; i < d1.size; ++i) 
+	for (int i = 0; i < d1.size; ++i)
 	{
 		*last *= num;
 		last = last->getNext();
@@ -125,47 +202,104 @@ Deck operator*(const Deck& d1, int num)
 	return d1;
 }
 
-bool Deck::operator==(const Deck& d1)
+bool Deck::operator==(const Deck& second)
 {
-	DeckElement* other = d1.head;
-	DeckElement* current = this->head;
+	DeckElement* other = second.tail;
+	DeckElement* current = this->tail;
 
-	if (d1.size != size)
+	bool condition = second.size == size; // Если размеры стеков не совпадают то, сразу устанавливаем false 
+
+	if (isEmpty() || second.size == 0)
 	{
-		cout << "Not equal" << endl;
+		cout << "Deck is Empty!";
 		return false;
 	}
-	for (int i = 0; i < size; ++i)
+
+	for (int i = 0; i < min(size, second.size); ++i)
 	{
-		if (other->getData() != current->getData())
-			cout << other->getData() << "!=" << current->getData() << endl;
-		else
-			cout << other->getData() << "=" << current->getData() << endl;
+		if (other->getData() != current->getData()) {
+
+			condition = false;
+			cout << "\x1b[31m" << other->getData() << " != " << current->getData() << "\x1b[0m"  << endl;
+
+		} else {
+			cout << "\x1b[32m" << other->getData() << " == " << current->getData() << "\x1b[0m" << endl;
+		}
+
 		current = current->getNext();
 		other = other->getNext();
 	}
-	return true;
+
+	return condition;
 }
 
-bool Deck::operator!=(const Deck& d1)
+bool Deck::operator!=(const Deck& second)
 {
-	return !this->operator==(d1);
-}
+	DeckElement* other = second.tail;
+	DeckElement* current = this->tail;
 
-//Deck& operator=Deck(const Deck& src) = default;
-//Deck& operator=Deck(Deck&& src) = default;
-
-string Deck::getStr() {
-	DeckElement* current = this->head;
-	string result = "";
-
-	while (current != tail)
+	bool condition = second.size != size; // Если размеры стеков не совпадают то, сразу устанавливаем false 
+	
+	if (isEmpty() || second.size == 0)
 	{
-		result += std::to_string(current->getData());
+		cout << "Deck is Empty!";
+		return false;
+	}
+
+	for (int i = 0; i < min(size, second.size); ++i)
+	{
+		if (other->getData() != current->getData()) {
+			cout << "\x1b[32m" << other->getData() << " != " << current->getData() << "\x1b[0m" << endl;
+		} else {
+			condition = condition || false;
+			cout << "\x1b[31m" << other->getData() << " == " << current->getData() << "\x1b[0m" << endl;
+		}
 
 		current = current->getNext();
-
-		if (current != tail) result += " <=> ";
+		other = other->getNext();
 	}
+
+	return condition;
+}
+
+Deck Deck::operator=(Deck deck)
+{
+	Clear();
+
+	DeckElement* current = deck.tail;
+
+	do
+	{
+		append(current->getData());
+
+	} while ((current = current->getNext()) != deck.tail);
+
+
+	return *this;
+}
+
+string Deck::getStr() {
+
+	if (isEmpty())
+	{
+		string result = "Deck is Empty!";
+		return result;
+	}
+
+	DeckElement* current = this->tail;
+	string result = "";
+
+	do
+	{
+		if (current != tail) result += " <=> ";
+		result += std::to_string(current->getData());
+
+	} while ((current = current->getNext()) != tail && current);
+
 	return result;
+}
+
+
+bool Deck::isEmpty() {
+	return size == 0;
 }
